@@ -22,8 +22,6 @@ Add a Markdown file to `src/content/blog/`. The filename becomes the URL, so `sr
 title: Retries are a product decision
 date: 2026-05-02
 tags: [distributed-systems, reliability]
-excerpt: "Every retry policy encodes an assumption about how much a user's time is worth."
-lede: "Optional. A longer opening paragraph shown large at the top of the post. Falls back to excerpt."
 draft: false
 ---
 
@@ -34,7 +32,8 @@ Frontmatter fields:
 
 - `title` and `date` are required. `date` is an ISO date such as `2026-05-02`.
 - `tags` is a list of strings. The blog index builds its filter buttons from these.
-- `excerpt` is required. It appears in search, as the meta description, and as the lede when `lede` is omitted. Quote it if it contains a colon.
+- `excerpt` is optional. When provided, it appears in search, as the meta description, and as the lede when `lede` is omitted. Without it, the meta description uses the site default. Quote it if it contains a colon.
+- `lede` is optional. It adds an opening paragraph shown large above the body. If both `lede` and `excerpt` are omitted, the post starts directly with the Markdown body.
 - `draft: true` shows the post in `pnpm dev` but leaves it out of the production build.
 
 Reading time is computed from the word count. Posts are sorted newest first, and the previous/next links at the bottom of each post follow that order.

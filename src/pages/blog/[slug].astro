@@ -41,7 +41,7 @@ const { Content } = await render(post);
         }
       </div>
 
-      <p class="lede">{post.lede}</p>
+      {post.lede && <p class="lede">{post.lede}</p>}
 
       <div class="prose">
         <Content />

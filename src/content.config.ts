@@ -9,8 +9,8 @@ const blog = defineCollection({
     /** ISO date, e.g. 2026-07-14 */
     date: z.coerce.date(),
     tags: z.array(z.string()).default([]),
-    /** One or two sentences. Used in the list, in search, and as the meta description. */
-    excerpt: z.string(),
+    /** Optional summary used in search and as the meta description. */
+    excerpt: z.string().optional(),
     /** Opening paragraph shown large at the top of the post. Falls back to `excerpt`. */
     lede: z.string().optional(),
     /** Drafts are visible in `astro dev` but excluded from the production build. */

@@ -10,7 +10,7 @@ export type Post = CollectionEntry<'blog'> & {
   dateIso: string;
   dateFull: string;
   readTime: string;
-  lede: string;
+  lede: string | undefined;
   tagLine: string;
   /** Lower-cased text used by the client-side search. */
   haystack: string;
