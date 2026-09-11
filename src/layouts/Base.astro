@@ -1,0 +1,59 @@
+---
+import '../styles/global.css';
+import { site } from '../site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  here?: 'about' | 'blog' | 'photos' | 'resume';
+}
+
+const { title, description = site.description, here } = Astro.props;
+const fullTitle = title ? `${title} · ${site.name}` : site.name;
+const hereLabel = here === 'resume' ? 'résumé' : here === 'blog' || here === 'photos' ? here : '';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="nav" aria-label="Site">
+        <a href="/">about</a>
+        <a href="/blog">blog</a>
+        <a href="/photos">photos</a>
+        <a href="/resume">résumé</a>
+        <span class="here">{hereLabel}</span>
+      </nav>
+      <slot />
+    </div>
+
+    <script>
+      // "/" jumps to search from anywhere on the site.
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+        const el = document.activeElement as HTMLElement | null;
+        if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
+        e.preventDefault();
+        const search = document.getElementById('search');
+        if (search) search.focus();
+        else location.href = '/blog#search';
+      });
+    </script>
+  </body>
+</html>

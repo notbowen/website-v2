@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../site';
+---
+
+<Base here="about">
+  <main>
+    <h1 class="name">{site.name}</h1>
+    <p class="p">
+      Incoming larper at the Singapore Armed Forces. Learning about AI and
+      (attempting to learn) PL theory in my spare time. Occasionally you'd
+      catch me clanking out a CTF.
+    </p>
+    <p class="p">
+      Do check out my <a class="link-muted" href="/photos">photos</a>, I think they're pretty
+      cool. Or my <a class="link-muted" href="/resume">resume</a>, if anyone's interested in
+      stalking me.
+    </p>
+    <p class="p intro-last">
+      I occasionally try to piece together coherent pieces of <a
+        class="link-muted" href="/blog">texts</a> to (try to) understand a
+      topic, or to articulate my views on subjects.
+    </p>
+    <p class="contact">
+      <a class="link-muted" href={`mailto:${site.email}`}>{site.email}</a><br />
+      <a class="link-muted" href={site.github}>github</a>
+      <span class="dot">·</span>
+      <a class="link-muted" href={site.linkedin}>linkedin</a>
+    </p>
+  </main>
+</Base>
+
+<style>
+  .name {
+    margin: 0 0 20px;
+    font: 600 17px/1.4 var(--serif);
+  }
+  .intro-last {
+    margin-bottom: 28px;
+  }
+  .contact {
+    margin: 0;
+    font: 400 13px/2 var(--mono);
+  }
+  .link-muted {
+    color: var(--mut);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .link-muted:hover,
+  .link-muted:focus-visible {
+    color: var(--ink);
+  }
+  .dot {
+    color: var(--mut);
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+</style>

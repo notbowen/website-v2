@@ -1,0 +1,241 @@
+---
+// Rendered from src/content/resume.typ. Edit the Typst file; this page follows.
+import Base from '../layouts/Base.astro';
+import { resume, html } from '../lib/resume';
+---
+
+<Base title="Résumé" here="resume">
+  <main>
+    <header class="top">
+      <h1 class="name">{resume.name}</h1>
+      <p class="connections">
+        {
+          resume.connections.map((c, i) => (
+            <>
+              {i > 0 && <span class="dot">·</span>}
+              <span set:html={html(c)} />
+            </>
+          ))
+        }
+      </p>
+      {resume.topNote && <p class="note" set:html={html(resume.topNote)} />}
+    </header>
+
+    {
+      resume.sections.map((section) => (
+        <section class="section">
+          {section.title && <h2 class="mono-label">{section.title}</h2>}
+          {section.blocks.map((block) => {
+            if (block.type === 'paragraph') return <p class="p" set:html={html(block.children)} />;
+            if (block.type === 'list')
+              return (
+                <ul>
+                  {block.items.map((item) => (
+                    <li set:html={html(item)} />
+                  ))}
+                </ul>
+              );
+            if (block.type === 'grid')
+              return (
+                <div class="grid" style={`--cols: ${block.columns}`}>
+                  {block.rows.map((row) => (
+                    <div class="grid-row">
+                      {row.map((cell) => (
+                        <span class="cell" set:html={html(cell)} />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              );
+            return (
+              <article class="entry">
+                <div class="head">
+                  <span class="title">
+                    {block.degree.length > 0 && <span class="degree" set:html={html(block.degree)} />}
+                    <span set:html={html(block.title)} />
+                  </span>
+                  {block.date.length > 0 && <span class="dates" set:html={html(block.date)} />}
+                </div>
+                {(block.role.length > 0 || block.location.length > 0) && (
+                  <div class="sub">
+                    {block.role.length > 0 && <span class="role" set:html={html(block.role)} />}
+                    {block.location.length > 0 && <span class="location" set:html={html(block.location)} />}
+                  </div>
+                )}
+                {block.notes.map((n) => (
+                  <p class="summary" set:html={html(n)} />
+                ))}
+                {block.highlights.length > 0 && (
+                  <ul>
+                    {block.highlights.map((h) => (
+                      <li set:html={html(h)} />
+                    ))}
+                  </ul>
+                )}
+              </article>
+            );
+          })}
+        </section>
+      ))
+    }
+  </main>
+</Base>
+
+<style>
+  .top {
+    margin: 0 0 40px;
+  }
+  .name {
+    margin: 0 0 10px;
+    font: 600 17px/1.4 var(--serif);
+  }
+  .connections {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 8px;
+    margin: 0;
+    font: 400 13px/1.9 var(--mono);
+    color: var(--body);
+  }
+  .connections .dot {
+    color: var(--mut);
+  }
+  .note {
+    margin: 6px 0 0;
+    font: 400 12px/1.8 var(--mono);
+    color: var(--faint);
+  }
+
+  .section {
+    margin: 0 0 38px;
+  }
+  .section:last-child {
+    margin-bottom: 0;
+  }
+  h2 {
+    margin: 0 0 14px;
+  }
+  .p {
+    margin: 0;
+  }
+
+  .entry {
+    margin: 0 0 24px;
+  }
+  .entry:last-child {
+    margin-bottom: 0;
+  }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 15.5px;
+    line-height: 1.5;
+  }
+  .head .title :global(strong) {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .head .title :global(a) {
+    border-bottom: 1px solid var(--line);
+  }
+  .head .title :global(a:hover) {
+    border-color: var(--ink);
+  }
+  .degree {
+    margin-right: 8px;
+    font: 500 11px/1 var(--mono);
+    letter-spacing: 0.06em;
+    color: var(--mut);
+    vertical-align: 1px;
+  }
+  .degree :global(strong) {
+    font-weight: 500;
+  }
+  .dates {
+    flex: none;
+    font: 400 12px/1.9 var(--mono);
+    color: var(--mut);
+    white-space: nowrap;
+  }
+  .sub {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    margin-top: 1px;
+  }
+  .role {
+    font-size: 14.5px;
+    line-height: 1.5;
+    font-style: italic;
+    color: var(--mut);
+  }
+  .location {
+    flex: none;
+    margin-left: auto;
+    font: 400 12px/1.9 var(--mono);
+    color: var(--faint);
+    white-space: nowrap;
+  }
+  .summary {
+    margin: 2px 0 6px;
+    font-size: 14.5px;
+    line-height: 1.5;
+    font-style: italic;
+    color: var(--mut);
+  }
+  ul {
+    margin: 6px 0 0;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  li {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--body);
+  }
+
+  .grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .grid-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--body);
+  }
+  .grid-row .cell:last-child:not(:first-child) {
+    flex: none;
+    text-align: right;
+    font: 400 12px/1.9 var(--mono);
+    color: var(--mut);
+  }
+  .grid-row :global(strong) {
+    font-weight: 400;
+    color: var(--mut);
+  }
+
+  @media (max-width: 480px) {
+    .head,
+    .sub,
+    .grid-row {
+      flex-direction: column;
+      gap: 0;
+    }
+    .location {
+      margin-left: 0;
+    }
+    .grid-row .cell:last-child:not(:first-child) {
+      text-align: left;
+    }
+  }
+</style>

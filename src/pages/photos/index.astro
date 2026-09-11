@@ -1,0 +1,140 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { getPhotos, groupByPlace } from '../../lib/photos';
+
+const photos = await getPhotos();
+const places = groupByPlace(photos);
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+---
+
+<Base
+  title="Photos"
+  here="photos"
+  description="Photographs from trips, detours, and whatever else happened to be worth pointing a camera at."
+>
+  <main>
+    <p class="count">{plural(photos.length, 'photograph')} · {plural(places.length, 'place')}</p>
+    <p class="p intro">
+      Welcome to my collection of photos. Larp larp larp sahur.
+    </p>
+
+    {
+      places.map((place) => (
+        <section class="place">
+          <div class="head">
+            <h2>{place.name}</h2>
+            <span class="meta">{place.meta}</span>
+          </div>
+          <div class="grid">
+            {place.photos.map((p) => (
+              <figure>
+                <a class="frame" href={p.href} aria-label={p.alt}>
+                  <Image
+                    src={p.data.src}
+                    alt={p.alt}
+                    widths={[320, 640, 960]}
+                    sizes="(max-width: 420px) calc(100vw - 48px), 320px"
+                    loading="lazy"
+                  />
+                </a>
+                <figcaption>
+                  <a class="cap" href={p.href}>
+                    {p.data.caption} →
+                  </a>
+                  <span class="time">{p.time || p.dateFull}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </main>
+</Base>
+
+<style>
+  .count {
+    margin: 0 0 8px;
+    font: 400 13px/1.7 var(--mono);
+    color: var(--mut);
+  }
+  .intro {
+    margin-bottom: 44px;
+  }
+  .place {
+    margin: 0 0 52px;
+  }
+  .place:last-child {
+    margin-bottom: 0;
+  }
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  h2 {
+    margin: 0;
+    font: 600 16px/1.4 var(--serif);
+    color: var(--ink);
+  }
+  .meta {
+    flex: none;
+    font: 400 11.5px/1.6 var(--mono);
+    color: var(--faint);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  figure {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin: 0;
+    min-width: 0;
+  }
+  .frame {
+    display: block;
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+    background: var(--sel);
+  }
+  .frame:hover {
+    border-color: var(--ink);
+  }
+  .frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cap {
+    display: block;
+    font: 400 12px/1.5 var(--mono);
+    color: var(--body);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cap:hover {
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 2px;
+  }
+  .time {
+    display: block;
+    margin-top: 2px;
+    font: 400 11px/1.5 var(--mono);
+    color: var(--faint);
+  }
+</style>

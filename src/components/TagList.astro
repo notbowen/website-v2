@@ -1,0 +1,58 @@
+---
+// Tag filter buttons. The active state is driven by the blog page script.
+interface Props {
+  tags: { name: string; count: number }[];
+  total: number;
+}
+const { tags, total } = Astro.props;
+const all = [{ name: '', label: 'all', count: total }, ...tags.map((t) => ({ ...t, label: t.name }))];
+---
+
+<div class="tags" role="group" aria-label="Filter by tag">
+  {
+    all.map((t) => (
+      <button type="button" class="tag" data-tag={t.name} aria-pressed={t.name === '' ? 'true' : 'false'}>
+        <span class="label">{t.label}</span>
+        <span class="count">{t.count}</span>
+      </button>
+    ))
+  }
+</div>
+
+<style>
+  .tag {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-weight: 400;
+  }
+  .tag:hover {
+    opacity: 0.7;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 20px 0 0;
+  }
+  .tags .tag {
+    padding: 4px 9px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: var(--body);
+  }
+  .tags .count {
+    opacity: 0.55;
+    margin-left: 0.4em;
+  }
+  .tags .tag[aria-pressed='true'] {
+    border-color: var(--link);
+    background: var(--link);
+    color: var(--bg);
+  }
+
+</style>

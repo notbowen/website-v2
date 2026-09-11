@@ -1,0 +1,165 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { getPhotos, fromPlace, type Photo } from '../../lib/photos';
+
+export async function getStaticPaths() {
+  const photos = await getPhotos();
+  return photos.map((photo) => ({
+    params: { id: photo.id },
+    props: { photo, siblings: fromPlace(photos, photo.place) },
+  }));
+}
+
+interface Props {
+  photo: Photo;
+  siblings: Photo[];
+}
+
+const { photo, siblings } = Astro.props;
+const { width, height } = photo.data.src;
+---
+
+<Base title={photo.data.caption} description={`${photo.alt} · ${photo.stamp}`} here="photos">
+  <main>
+    <a class="back" href="/photos">← all photos</a>
+
+    <div class="shot" style={`aspect-ratio: ${width} / ${height}`}>
+      <Image
+        src={photo.data.src}
+        alt={photo.alt}
+        widths={[640, 960, 1280, 1920]}
+        sizes="(max-width: 640px) calc(100vw - 48px), 592px"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+
+    <h1>{photo.data.caption}</h1>
+    <p class="where">{photo.place} · {photo.stamp}</p>
+
+    <dl class="exif">
+      {
+        photo.rows.map((row) => (
+          <div class="row">
+            <dt>{row.k}</dt>
+            <dd>{row.v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    {
+      siblings.length > 1 && (
+        <nav class="more" aria-label={`More from ${photo.place}`}>
+          <div class="label">More from {photo.place}</div>
+          <div class="list">
+            {siblings.map((sib) =>
+              sib.id === photo.id ? (
+                <span class="sib current" aria-current="page">
+                  <span>{sib.data.caption}</span>
+                  <span class="time">{sib.time || sib.dateFull}</span>
+                </span>
+              ) : (
+                <a class="sib" href={sib.href}>
+                  <span>{sib.data.caption}</span>
+                  <span class="time">{sib.time || sib.dateFull}</span>
+                </a>
+              ),
+            )}
+          </div>
+        </nav>
+      )
+    }
+  </main>
+</Base>
+
+<style>
+  .back {
+    display: inline-block;
+    margin: 0 0 32px;
+    font: 400 12px/1 var(--mono);
+    color: var(--mut);
+  }
+  .back:hover {
+    color: var(--ink);
+  }
+  .shot {
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    background: var(--sel);
+  }
+  .shot img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  h1 {
+    margin: 24px 0 0;
+    font: 600 22px/1.35 var(--serif);
+    color: var(--ink);
+  }
+  .where {
+    margin: 8px 0 0;
+    font: 400 13px/1.7 var(--mono);
+    color: var(--mut);
+  }
+  .exif {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0 20px;
+    margin: 30px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font: 400 12.5px/2.1 var(--mono);
+  }
+  .row {
+    display: contents;
+  }
+  dt {
+    color: var(--faint);
+    white-space: nowrap;
+  }
+  dd {
+    margin: 0;
+    color: var(--body);
+  }
+
+  .more {
+    margin: 40px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .label {
+    font: 400 11.5px/1 var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .list {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+  .sib {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--line);
+    font: 400 12.5px/1.5 var(--mono);
+    color: var(--body);
+  }
+  .sib.current {
+    color: var(--faint);
+  }
+  a.sib:hover {
+    color: var(--link);
+  }
+  .sib .time {
+    flex: none;
+    color: var(--faint);
+  }
+</style>

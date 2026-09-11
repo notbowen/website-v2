@@ -1,0 +1,232 @@
+---
+import Base from '../../layouts/Base.astro';
+import TagList from '../../components/TagList.astro';
+import { getPosts, tagCounts, groupByYear } from '../../lib/posts';
+
+const posts = await getPosts();
+const tags = tagCounts(posts);
+const groups = groupByYear(posts);
+---
+
+<Base title="Blog" here="blog">
+  <main class="blog" data-total={posts.length}>
+    <div class="list">
+      <input
+        id="search"
+        type="search"
+        placeholder="search posts"
+        aria-label="Search posts"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <div class="meta">
+        <span id="count" aria-live="polite">{posts.length} posts</span>
+        <span class="hint">press / to search</span>
+      </div>
+
+      <TagList tags={tags} total={posts.length} />
+
+      <div id="posts" class="posts">
+        {
+          groups.map((g) => (
+            <section>
+              <div class="year">{g.year}</div>
+              {g.items.map((p) => (
+                <a class="post" href={p.href} data-tags={p.data.tags.join(' ')} data-hay={p.haystack}>
+                  <span class="row">
+                    <span class="date">{p.dateIso}</span>
+                    <span class="title">{p.data.title}</span>
+                  </span>
+                  {p.tagLine && <span class="tagline">{p.tagLine}</span>}
+                </a>
+              ))}
+            </section>
+          ))
+        }
+      </div>
+
+      <p id="empty" class="empty" hidden>
+        nothing matches — <button type="button" id="reset">clear filters</button>
+      </p>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .list {
+    width: 100%;
+  }
+  #search {
+    width: 100%;
+    box-sizing: border-box;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: transparent;
+    outline: 0;
+    padding: 0 0 9px;
+    font: 400 14px/1.3 var(--mono);
+    color: var(--ink);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  #search::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+  #search:focus {
+    border-bottom-color: var(--ink);
+  }
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 10px 0 0;
+    font: 400 12px/1.4 var(--mono);
+    color: var(--mut);
+  }
+  .hint {
+    color: var(--faint);
+  }
+  @media (hover: none) {
+    .hint {
+      display: none;
+    }
+  }
+
+  .posts {
+    margin-top: 28px;
+  }
+  .year {
+    margin: 22px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    font: 500 11px/1 var(--mono);
+    letter-spacing: 0.1em;
+    color: var(--mut);
+  }
+  section:first-child .year {
+    margin-top: 0;
+  }
+  .post {
+    display: block;
+    padding: 11px 0;
+    color: var(--ink);
+  }
+  .post:hover {
+    opacity: 0.6;
+    color: var(--ink);
+  }
+  .row {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+  }
+  .date {
+    width: 84px;
+    flex: none;
+    font: 400 12px/1.7 var(--mono);
+    color: var(--faint);
+  }
+  .title {
+    min-width: 0;
+    font-size: 15.5px;
+    line-height: 1.5;
+  }
+  .tagline {
+    display: block;
+    margin-top: 4px;
+    margin-left: 98px;
+    font: 400 11.5px/1.6 var(--mono);
+    color: var(--faint);
+  }
+  .empty {
+    margin: 24px 0 0;
+    font: 400 13px/1.6 var(--mono);
+    color: var(--body);
+  }
+  .empty button {
+    border: 0;
+    background: 0;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    color: var(--link);
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  // Client-side filtering. Everything is rendered at build time; this only
+  // toggles `hidden` on rows, keeps the tag buttons' pressed state in sync,
+  // and mirrors the filter into the URL so a filtered view can be shared.
+  const main = document.querySelector<HTMLElement>('main.blog')!;
+  const input = document.getElementById('search') as HTMLInputElement;
+  const count = document.getElementById('count')!;
+  const empty = document.getElementById('empty')!;
+  const reset = document.getElementById('reset')!;
+  const posts = Array.from(document.querySelectorAll<HTMLAnchorElement>('.post'));
+  const sections = Array.from(document.querySelectorAll<HTMLElement>('#posts section'));
+  const tagButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-tag]'));
+  const total = Number(main.dataset.total);
+
+  const params = new URLSearchParams(location.search);
+  let tag = params.get('tag') ?? '';
+  input.value = params.get('q') ?? '';
+
+  function apply() {
+    const q = input.value.trim().toLowerCase();
+    const words = q.split(/\s+/).filter(Boolean);
+    let shown = 0;
+
+    for (const post of posts) {
+      const tags = (post.dataset.tags ?? '').split(' ');
+      const hay = post.dataset.hay ?? '';
+      const ok = (!tag || tags.includes(tag)) && words.every((w) => hay.includes(w));
+      post.hidden = !ok;
+      if (ok) shown++;
+    }
+    for (const section of sections) {
+      section.hidden = !section.querySelector('.post:not([hidden])');
+    }
+    for (const b of tagButtons) b.setAttribute('aria-pressed', String(b.dataset.tag === tag));
+
+    const bits: string[] = [];
+    if (tag) bits.push('#' + tag);
+    if (q) bits.push('“' + input.value.trim() + '”');
+    count.textContent = bits.length ? `${shown} of ${total} · ${bits.join(' + ')}` : `${total} posts`;
+    empty.hidden = shown > 0;
+
+    const url = new URL(location.href);
+    tag ? url.searchParams.set('tag', tag) : url.searchParams.delete('tag');
+    q ? url.searchParams.set('q', input.value.trim()) : url.searchParams.delete('q');
+    history.replaceState(null, '', url);
+  }
+
+  function clear() {
+    tag = '';
+    input.value = '';
+    apply();
+  }
+
+  input.addEventListener('input', apply);
+  reset.addEventListener('click', clear);
+  for (const b of tagButtons) {
+    b.addEventListener('click', () => {
+      const name = b.dataset.tag ?? '';
+      tag = name && tag === name ? '' : name;
+      apply();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && (input.value || tag)) {
+      e.preventDefault();
+      clear();
+    }
+  });
+
+  apply();
+  if (location.hash === '#search') {
+    input.focus();
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+</script>

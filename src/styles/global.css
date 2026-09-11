@@ -1,0 +1,207 @@
+:root {
+  --bg: #fafafa;
+  --ink: #000000;
+  --body: #262626;
+  --faint: #6b6b6b;
+  --mut: #4f4f4f;
+  --line: rgba(0, 0, 0, 0.16);
+  --link: #000000;
+  --sel: #e2e2e2;
+  --serif: Lora, Georgia, 'Times New Roman', serif;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+html {
+  background: var(--bg);
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif);
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+}
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--ink);
+}
+::selection {
+  background: var(--sel);
+  color: var(--ink);
+}
+input::placeholder {
+  color: var(--mut);
+}
+button {
+  font-family: inherit;
+}
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 72px 24px 96px;
+  color: var(--ink);
+}
+
+/* Top nav */
+.nav {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 56px;
+  font: 400 13px/1 var(--mono);
+}
+.nav a {
+  color: var(--link);
+}
+.nav a:hover {
+  opacity: 0.6;
+}
+.nav .here {
+  margin-left: auto;
+  color: var(--mut);
+}
+
+/* Shared type */
+.mono-label {
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mut);
+}
+.p {
+  margin: 0 0 16px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--body);
+}
+
+/* Rendered Markdown inside a post */
+.prose > :first-child {
+  margin-top: 0;
+}
+.prose p {
+  margin: 20px 0 0;
+  font: 400 15px/1.75 var(--serif);
+  color: var(--body);
+}
+.prose h2,
+.prose h3 {
+  margin: 42px 0 0;
+  font: 600 13px/1 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.prose h3 {
+  margin-top: 32px;
+  font-weight: 500;
+  color: var(--mut);
+}
+.prose h2 + p,
+.prose h3 + p {
+  margin-top: 16px;
+}
+.prose blockquote {
+  margin: 30px 0 0;
+  padding: 0 0 0 20px;
+  border-left: 2px solid var(--ink);
+  font: 400 16px/1.62 var(--serif);
+  font-style: italic;
+  color: var(--ink);
+}
+.prose blockquote p {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+.prose blockquote p + p {
+  margin-top: 12px;
+}
+.prose pre {
+  margin: 26px 0 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow-x: auto;
+  font: 400 12px/1.75 var(--mono);
+  color: var(--body);
+  background: transparent !important; /* override Shiki's inline theme background */
+}
+.prose pre code {
+  font: inherit;
+  background: none;
+  padding: 0;
+}
+.prose code {
+  font: 400 0.88em/1 var(--mono);
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: var(--sel);
+}
+.prose ul,
+.prose ol {
+  margin: 20px 0 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.prose li {
+  font: 400 14.5px/1.6 var(--serif);
+  color: var(--body);
+}
+.prose li p {
+  margin: 0;
+}
+.prose a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 2px;
+}
+.prose a:hover {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 30px 0 0;
+  border-radius: 4px;
+}
+.prose hr {
+  margin: 40px 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+.prose table {
+  margin: 26px 0 0;
+  width: 100%;
+  border-collapse: collapse;
+  font: 400 13px/1.6 var(--mono);
+  color: var(--body);
+}
+.prose th,
+.prose td {
+  text-align: left;
+  padding: 6px 10px 6px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.prose th {
+  font-weight: 500;
+  color: var(--mut);
+}
+.prose strong {
+  font-weight: 600;
+  color: var(--ink);
+}
