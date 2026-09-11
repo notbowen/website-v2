@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import PhotoImage from '../../components/PhotoImage.astro';
 import Base from '../../layouts/Base.astro';
 import { getPhotos, groupByPlace } from '../../lib/photos';
 
@@ -30,12 +30,10 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
             {place.photos.map((p) => (
               <figure>
                 <a class="frame" href={p.href} aria-label={p.alt}>
-                  <Image
+                  <PhotoImage
                     src={p.data.src}
                     alt={p.alt}
-                    widths={[320, 640, 960]}
-                    sizes="(max-width: 420px) calc(100vw - 48px), 320px"
-                    loading="lazy"
+                    thumbnail
                   />
                 </a>
                 <figcaption>
@@ -110,12 +108,6 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
   }
   .frame:hover {
     border-color: var(--ink);
-  }
-  .frame img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
   }
   .cap {
     display: block;
