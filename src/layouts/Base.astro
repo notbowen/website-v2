@@ -31,6 +31,14 @@ const hereLabel = here === 'resume' ? 'résumé' : here === 'blog' || here === '
     />
     <slot name="head" />
   </head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R96NB6L7Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-5R96NB6L7Q');
+  </script>
   <body>
     <div class="wrap">
       <nav class="nav" aria-label="Site">
@@ -55,5 +63,11 @@ const hereLabel = here === 'resume' ? 'résumé' : here === 'blog' || here === '
         else location.href = '/blog#search';
       });
     </script>
+    <script src="https://analytics.ahrefs.com/analytics.js" data-key="92uRw8zcU6UwC3aHotBp6A" async></script>
+    <script
+      defer
+      src="https://analytics.hubowen.dev/script.js"
+      data-cookie-domain="hubowen.dev"
+    ></script>
   </body>
 </html>
