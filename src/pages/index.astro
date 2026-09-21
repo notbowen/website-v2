@@ -1,15 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
 import { site } from '../site';
+import { Content as Now, frontmatter as now } from '../content/now.md';
+
+// The frontmatter date is parsed as UTC midnight, so format with UTC getters
+// to avoid the day shifting in negative-offset timezones.
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const updated = new Date(now.updated);
+const updatedIso = updated.toISOString().slice(0, 10);
+const updatedFull = `${MONTHS[updated.getUTCMonth()]} ${updated.getUTCDate()}, ${updated.getUTCFullYear()}`;
 ---
 
 <Base here="about">
   <main>
-    <h1 class="name">{site.name}</h1>
+    <h1 class="intro">{site.name}</h1>
     <p class="p">
       Incoming larper at the Singapore Armed Forces. Learning about AI and
       (attempting to learn) PL theory in my spare time. Occasionally you'd
-      catch me clanking out a CTF.
+      catch me clanking out a side project.
     </p>
     <p class="p">
       Do check out my <a class="link-muted" href="/photos">photos</a>, I think they're pretty
@@ -21,6 +29,17 @@ import { site } from '../site';
         class="link-muted" href="/blog">texts</a> to (try to) understand a
       topic, or to articulate my views on subjects.
     </p>
+
+    <section class="now" aria-labelledby="now-heading">
+      <div class="now-head">
+        <h2 class="mono-label" id="now-heading"><span class="pip" aria-hidden="true"></span>Now</h2>
+        <time class="now-updated" datetime={updatedIso}>{updatedFull}</time>
+      </div>
+      <div class="prose">
+        <Now />
+      </div>
+    </section>
+
     <p class="contact">
       <a class="link-muted" href={`mailto:${site.email}`}>{site.email}</a><br />
       <a class="link-muted" href={site.github}>github</a>
@@ -31,12 +50,156 @@ import { site } from '../site';
 </Base>
 
 <style>
-  .name {
+  .intro {
     margin: 0 0 20px;
     font: 600 17px/1.4 var(--serif);
   }
   .intro-last {
     margin-bottom: 28px;
+  }
+  .now {
+    margin: 0 0 30px;
+    padding-top: 26px;
+    border-top: 1px solid var(--line);
+  }
+  .now-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .now h2 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink);
+  }
+  /* Small filled dot reading as a "currently live" marker. */
+  .pip {
+    flex: none;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+  .now-updated {
+    font: 400 11px/1 var(--mono);
+    color: var(--faint);
+    white-space: nowrap;
+  }
+
+  /* Markdown from now.md renders unscoped, so these reach it with :global(). */
+
+  /* Headings sit in a left gutter beside their text: each heading opens a grid
+     row in column 1, and everything else flows down column 2. */
+  .now .prose {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    column-gap: 20px;
+    row-gap: 9px;
+    align-items: start;
+  }
+  .now .prose > :global(*) {
+    grid-column: 2;
+    margin: 0;
+  }
+  .now .prose > :global(h2),
+  .now .prose > :global(h3) {
+    grid-column: 1;
+    /* Fixed line box matches the body line height, so the label sits on the
+       same baseline as the first line of its text. */
+    font: 500 10.5px/23px var(--mono);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  /* Extra air between groups, applied to both cells of the row so the label
+     and its first paragraph stay aligned. */
+  .now .prose > :global(h2),
+  .now .prose > :global(h3),
+  .now .prose > :global(h2 + *),
+  .now .prose > :global(h3 + *) {
+    margin-top: 15px;
+  }
+  .now .prose > :global(:first-child),
+  .now .prose > :global(:first-child + *) {
+    margin-top: 0;
+  }
+  .now .prose > :global(p) {
+    font: 400 14px/1.65 var(--serif);
+    color: var(--body);
+  }
+  .now .prose :global(em) {
+    font-style: italic;
+  }
+
+  .now .prose > :global(ul),
+  .now .prose > :global(ol) {
+    padding-left: 0;
+    list-style: none;
+    gap: 7px;
+  }
+  .now .prose :global(li) {
+    position: relative;
+    padding-left: 18px;
+    font: 400 14px/1.65 var(--serif);
+    color: var(--body);
+  }
+  .now .prose :global(ul > li)::before {
+    content: '\2014';
+    position: absolute;
+    left: 0;
+    font: 400 11px/23px var(--mono);
+    color: var(--faint);
+  }
+  .now .prose :global(ol) {
+    counter-reset: now-item;
+  }
+  .now .prose :global(ol > li) {
+    counter-increment: now-item;
+  }
+  .now .prose :global(ol > li)::before {
+    content: counter(now-item) '.';
+    position: absolute;
+    left: 0;
+    font: 400 11px/23px var(--mono);
+    color: var(--faint);
+  }
+  .now .prose :global(li ul),
+  .now .prose :global(li ol) {
+    margin-top: 7px;
+  }
+
+  /* Too narrow for a gutter: stack the label above its text. Spacing has to
+     carry the grouping the gutter did, so bind each label tightly to its own
+     text and put the air between groups. */
+  @media (max-width: 560px) {
+    /* The NOW label and the first group label now stack as two mono lines, so
+       give the header its own break. */
+    .now-head {
+      margin-bottom: 22px;
+    }
+    .now .prose {
+      display: block;
+    }
+    .now .prose > :global(*) {
+      margin: 12px 0 0;
+    }
+    .now .prose > :global(h2),
+    .now .prose > :global(h3) {
+      line-height: 1;
+      margin-top: 26px;
+      margin-bottom: 6px;
+    }
+    .now .prose > :global(h2 + *),
+    .now .prose > :global(h3 + *) {
+      margin-top: 0;
+    }
+    .now .prose > :global(:first-child) {
+      margin-top: 0;
+    }
   }
   .contact {
     margin: 0;

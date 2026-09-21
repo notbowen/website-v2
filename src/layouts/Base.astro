@@ -30,24 +30,47 @@ const hereLabel = here === 'resume' ? 'résumé' : here === 'blog' || here === '
       rel="stylesheet"
     />
     <slot name="head" />
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-5R96NB6L7Q"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { window.dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-5R96NB6L7Q');
+    </script>
   </head>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5R96NB6L7Q"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-5R96NB6L7Q');
-  </script>
   <body>
     <div class="wrap">
-      <nav class="nav" aria-label="Site">
-        <a href="/">about</a>
-        <a href="/blog">blog</a>
-        <a href="/photos">photos</a>
-        <a href="/resume">résumé</a>
-        <span class="here">{hereLabel}</span>
-      </nav>
+      <header class="layout-header">
+        <nav class="nav" aria-label="Site">
+          <a href="/">about</a>
+          <a href="/blog">blog</a>
+          <a href="/photos">photos</a>
+          <a href="/resume">résumé</a>
+          <span class="here">{hereLabel}</span>
+        </nav>
+        <!-- Original pfp.svg artwork, inlined so its eyes can be animated. -->
+        <cursor-face class="pfp">
+          <button class="pfp-button" type="button" aria-label="Make the face blink">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 460"
+              width="460" height="460" aria-hidden="true" focusable="false">
+              <ellipse cx="223.482" cy="231.762" rx="179.879" ry="165.362"
+                fill="none" stroke="#000000" stroke-width="9.613" />
+              <g data-eye data-cx="267" data-cy="164">
+                <g class="pfp-blink">
+                  <path fill="#000000" fill-rule="evenodd" d="M 268.538,173.444 C 271.083,173.059 273.376,171.691 274.876,169.634 C 276.534,167.359 277.222,164.242 276.497,161.545 C 275.196,156.705 269.346,153.214 264.555,154.424 C 259.742,155.638 255.998,161.598 257.363,166.444 C 257.682,167.578 258.281,168.651 259.002,169.604 C 259.716,170.548 260.55,171.374 261.533,172.009 C 263.532,173.301 266.146,173.807 268.538,173.444 Z"/>
+                </g>
+              </g>
+              <g data-eye data-cx="166.5" data-cy="190.5">
+                <g class="pfp-blink">
+                  <path fill="#000000" fill-rule="evenodd" d="M 168.814,200.501 C 170.754,199.712 172.145,197.628 173.052,195.56 C 174.199,192.944 174.572,190.352 174.038,187.682 C 173.807,186.527 173.407,185.358 172.907,184.207 C 172.461,183.182 171.937,182.171 171.207,181.407 C 169.296,179.407 165.976,179.097 163.586,180.154 C 159.239,182.076 157.97,188.523 159.019,193.644 C 159.498,195.98 160.459,198.04 162.272,199.379 C 164.088,200.72 166.759,201.338 168.814,200.501 Z"/>
+                </g>
+              </g>
+              <line x1="186.827" y1="255.919" x2="267.958" y2="242.207"
+                stroke="#000000" stroke-width="9.916" stroke-linecap="round" />
+            </svg>
+          </button>
+        </cursor-face>
+      </header>
       <slot />
     </div>
 
@@ -63,11 +86,243 @@ const hereLabel = here === 'resume' ? 'résumé' : here === 'blog' || here === '
         else location.href = '/blog#search';
       });
     </script>
-    <script src="https://analytics.ahrefs.com/analytics.js" data-key="92uRw8zcU6UwC3aHotBp6A" async></script>
+    <script is:inline src="https://analytics.ahrefs.com/analytics.js" data-key="92uRw8zcU6UwC3aHotBp6A" async></script>
     <script
+      is:inline
       defer
       src="https://analytics.hubowen.dev/script.js"
       data-cookie-domain="hubowen.dev"
     ></script>
   </body>
 </html>
+
+<style>
+  /* A small face aligned with the navigation, inside the existing wrapper. */
+  .layout-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(0.75rem, 3vw, 2rem);
+    margin-bottom: 2rem;
+  }
+  
+  .layout-header .nav {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    min-width: 0;
+    margin: 0;
+    column-gap: clamp(0.65rem, 2.5vw, 1.5rem);
+    row-gap: 0.65rem;
+  }
+  
+  .pfp {
+    --pfp-size: 44px;
+    display: block;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    line-height: 0;
+  }
+  
+  .pfp-button {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .pfp-button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+  
+  .pfp svg {
+    display: block;
+    width: var(--pfp-size);
+    height: var(--pfp-size);
+    border-radius: 50%;
+  }
+
+  @media (max-width: 480px) {
+    /* Smaller artwork, with the same 44px tap target. */
+    .pfp { --pfp-size: 36px; }
+  }
+  
+  /* Blink the inner group; cursor movement transforms the outer group. */
+  .pfp-blink {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pfp-blink 5.6s infinite;
+  }
+  
+  @keyframes pfp-blink {
+    0%, 40%, 44%, 75%, 79%, 100% { transform: scaleY(1); }
+    42%, 77% { transform: scaleY(0.08); }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .pfp-blink { animation: none; }
+  }
+</style>
+
+<script>
+  // Custom-element lifecycle also handles Astro client-side navigation.
+  class CursorFace extends HTMLElement {
+    private controller?: AbortController;
+    private frame = 0;
+    private svg: SVGSVGElement | null = null;
+    private eyes: Array<{ node: SVGGElement; cx: number; cy: number }> = [];
+    private motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    private pointer: { x: number; y: number } | null = null;
+    private x = 0;
+    private y = 0;
+    private angle = 0;
+    private lastTime = 0;
+    private manualBlinks: Animation[] = [];
+  
+    connectedCallback() {
+      this.controller?.abort();
+      this.controller = new AbortController();
+      const { signal } = this.controller;
+      this.svg = this.querySelector('svg');
+      this.eyes = Array.from(this.querySelectorAll<SVGGElement>('[data-eye]'))
+        .map((node) => ({
+          node,
+          cx: Number(node.dataset.cx),
+          cy: Number(node.dataset.cy),
+        }));
+  
+      if (!this.svg || this.eyes.length !== 2) return;
+  
+      document.addEventListener('pointermove', (event) => {
+        // Touchscreens still blink, but only a mouse moves the eyes.
+        if (event.pointerType !== 'mouse' || this.motion.matches) return;
+        this.pointer = { x: event.clientX, y: event.clientY };
+        this.requestFrame();
+      }, { passive: true, signal });
+  
+      const reset = () => {
+        this.pointer = null;
+        this.requestFrame();
+      };
+      document.documentElement.addEventListener('pointerleave', reset, { signal });
+      window.addEventListener('blur', reset, { signal });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) reset();
+      }, { signal });
+  
+      // Recalculate if the face moves while the cursor stays still.
+      window.addEventListener('scroll', () => {
+        if (this.pointer) this.requestFrame();
+      }, { passive: true, capture: true, signal });
+      window.addEventListener('resize', () => this.requestFrame(), { signal });
+  
+      // Click, tap, Enter, or Space triggers an extra blink.
+      this.querySelector('button')?.addEventListener('click', () => {
+        if (this.motion.matches) return;
+        this.manualBlinks.forEach((animation) => animation.cancel());
+        this.manualBlinks = Array.from(
+          this.querySelectorAll<SVGGElement>('.pfp-blink'),
+          (eye) => eye.animate([
+            { transform: 'scaleY(1)', offset: 0 },
+            { transform: 'scaleY(0.08)', offset: 0.45 },
+            { transform: 'scaleY(1)', offset: 1 },
+          ], { duration: 220, easing: 'ease-in-out' }),
+        );
+      }, { signal });
+  
+      this.motion.addEventListener('change', () => {
+        this.manualBlinks.forEach((animation) => animation.cancel());
+        this.pointer = null;
+        this.requestFrame();
+      }, { signal });
+    }
+  
+    disconnectedCallback() {
+      this.controller?.abort();
+      cancelAnimationFrame(this.frame);
+      this.frame = 0;
+      this.lastTime = 0;
+      this.pointer = null;
+      this.x = this.y = this.angle = 0;
+      this.manualBlinks.forEach((animation) => animation.cancel());
+      this.eyes.forEach(({ node }) => node.removeAttribute('transform'));
+    }
+  
+    private requestFrame() {
+      if (this.frame || !this.isConnected) return;
+      this.frame = requestAnimationFrame((time) => this.renderLook(time));
+    }
+  
+    private renderLook(time: number) {
+      this.frame = 0;
+      if (!this.svg || !this.isConnected) return;
+  
+      let targetX = 0;
+      let targetY = 0;
+      let targetAngle = 0;
+  
+      if (this.pointer && !this.motion.matches) {
+        const matrix = this.svg.getScreenCTM();
+        if (matrix) {
+          // Convert viewport coordinates to the SVG's 460 × 460 coordinate system.
+          const point = new DOMPoint(this.pointer.x, this.pointer.y)
+            .matrixTransform(matrix.inverse());
+          const dx = point.x - 216.75;
+          const dy = point.y - 177.25;
+          const distance = Math.hypot(dx, dy);
+          const strength = Math.min(distance / 180, 1);
+  
+          if (distance > 0) {
+            // Both eyes look in the same direction, without becoming cross-eyed.
+            targetX = (dx / distance) * 16 * strength;
+            targetY = (dy / distance) * 12 * strength;
+            targetAngle = (dx / distance) * 10 * strength;
+          }
+        }
+      }
+  
+      const delta = this.lastTime ? Math.min(time - this.lastTime, 64) : 16.67;
+      this.lastTime = time;
+      const ease = this.motion.matches ? 1 : 1 - Math.exp(-delta / 65);
+      this.x += (targetX - this.x) * ease;
+      this.y += (targetY - this.y) * ease;
+      this.angle += (targetAngle - this.angle) * ease;
+  
+      const settled = Math.abs(targetX - this.x) < 0.02
+        && Math.abs(targetY - this.y) < 0.02
+        && Math.abs(targetAngle - this.angle) < 0.02;
+      if (settled) {
+        this.x = targetX;
+        this.y = targetY;
+        this.angle = targetAngle;
+      }
+  
+      this.eyes.forEach(({ node, cx, cy }) => {
+        node.setAttribute('transform',
+          `translate(${this.x.toFixed(3)} ${this.y.toFixed(3)}) `
+          + `rotate(${this.angle.toFixed(3)} ${cx} ${cy})`);
+      });
+  
+      // Stop drawing as soon as the eyes settle instead of running an idle loop.
+      if (!settled) this.requestFrame();
+      else this.lastTime = 0;
+    }
+  }
+  
+  if (!customElements.get('cursor-face')) {
+    customElements.define('cursor-face', CursorFace);
+  }
+</script>
