@@ -40,7 +40,7 @@ const hereLabel = here === 'resume' ? 'résumé' : here === 'blog' || here === '
   </head>
   <body>
     <div class="wrap">
-      <header class="layout-header">
+      <header class="layout-header" id="top">
         <nav class="nav" aria-label="Site">
           <a href="/">about</a>
           <a href="/blog">blog</a>
@@ -74,7 +74,39 @@ const hereLabel = here === 'resume' ? 'résumé' : here === 'blog' || here === '
       <slot />
     </div>
 
+    <!-- Plain anchor, so it still works before (or without) the script. -->
+    <a class="to-top" href="#top">&uarr; top</a>
+
     <script>
+      // Reveal "back to top" only once there is something to scroll back over.
+      (() => {
+        const button = document.querySelector<HTMLAnchorElement>('.to-top');
+        if (!button) return;
+
+        let frame = 0;
+        const sync = () => {
+          frame = 0;
+          button.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.6);
+        };
+        const schedule = () => {
+          if (!frame) frame = requestAnimationFrame(sync);
+        };
+
+        sync();
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule, { passive: true });
+
+        // Move keyboard focus with the view, rather than leaving it at the bottom.
+        button.addEventListener('click', () => {
+          const top = document.getElementById('top');
+          if (!top) return;
+          top.setAttribute('tabindex', '-1');
+          top.focus({ preventScroll: true });
+          // The jump already happened; don't leave "#top" behind in the URL.
+          history.replaceState(null, '', location.pathname + location.search);
+        });
+      })();
+
       // "/" jumps to search from anywhere on the site.
       document.addEventListener('keydown', (e) => {
         if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
@@ -104,6 +136,8 @@ const hereLabel = here === 'resume' ? 'résumé' : here === 'blog' || here === '
     justify-content: space-between;
     gap: clamp(0.75rem, 3vw, 2rem);
     margin-bottom: 2rem;
+    /* Keep the wrapper's top padding in view when "back to top" jumps here. */
+    scroll-margin-top: 72px;
   }
   
   .layout-header .nav {
@@ -174,6 +208,47 @@ const hereLabel = here === 'resume' ? 'résumé' : here === 'blog' || here === '
   
   @media (prefers-reduced-motion: reduce) {
     .pfp-blink { animation: none; }
+  }
+
+  /* Back to top: same mono voice as the nav, tucked into the corner. */
+  .to-top {
+    position: fixed;
+    right: max(24px, env(safe-area-inset-right));
+    bottom: max(24px, env(safe-area-inset-bottom));
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--mut);
+    font: 400 12px/1 var(--mono);
+    /* Hidden until scrolled; untabbable meanwhile. */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+  }
+
+  .to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .to-top:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .to-top:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .to-top { transition: none; transform: none; }
   }
 </style>
 
