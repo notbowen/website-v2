@@ -1,12 +1,14 @@
 ---
-updated: 2026-09-29
+updated: 2026-10-09
 ---
 
 ## Health
 
 Heading into national service, so the nation will force me to stay fit by
 waking up before 5:30am and sleeping (hopefully) by 10:30pm and conducting
-physical training for the time in-between.
+physical training during the time in-between.
+
+Current IPPT stats: 26 pushups, 31 situps, 9:53 2.4km run.
 
 As a future CS major, I've also been climbing (albeit sporadically). Currently stuck at 4
 bars @ Fit Bloc.
