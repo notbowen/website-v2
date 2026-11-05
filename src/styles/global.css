@@ -88,6 +88,38 @@ button {
   color: var(--body);
 }
 
+/* Boxed drop cap on a post's opening letter; the post page sets --dropcap to
+   one of the designs in public/dropcaps. Sized in `lh` so it spans three lines
+   of whichever paragraph it sits in. */
+.dropcap {
+  float: left;
+  display: grid;
+  place-items: center;
+  width: calc(3lh - 4px);
+  height: calc(3lh - 4px);
+  margin: 2px 14px 0 0;
+  background: var(--dropcap) center / contain no-repeat;
+}
+.dropcap > span {
+  padding: 0 3px 5px 0;
+  font: italic 500 2lh/1 var(--serif);
+  color: var(--mut);
+  /* Knock the pattern out around the strokes so the letter stays legible. */
+  text-shadow:
+    0 0 1px var(--bg),
+    0 0 2px var(--bg),
+    0 0 3px var(--bg),
+    0 0 4px var(--bg),
+    0 0 6px var(--bg),
+    0 0 8px var(--bg);
+}
+/* Keep a short opening paragraph from letting the next one wrap the box. */
+p:has(> .dropcap)::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
 /* Rendered Markdown inside a post */
 .prose > :first-child {
   margin-top: 0;
