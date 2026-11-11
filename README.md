@@ -34,6 +34,7 @@ Frontmatter fields:
 - `tags` is a list of strings. The blog index builds its filter buttons from these.
 - `excerpt` is optional. When provided, it appears in search, as the meta description, and as the lede when `lede` is omitted. Without it, the meta description uses the site default. Quote it if it contains a colon.
 - `lede` is optional. It adds an opening paragraph shown large above the body. If both `lede` and `excerpt` are omitted, the post starts directly with the Markdown body.
+- `dropcap` is optional. It picks the boxed drop cap for the post's opening letter: `seigaiha`, `shippo`, `vine`, `sunburst`, `engraved`, `night-sky`, `illuminated`, `woodcut`, or `none`. Without it, the post uses the default in `src/lib/dropcaps.ts`. The drop cap goes on the lede when there is one, otherwise on the first paragraph of the body, and is skipped when that text opens with punctuation, a digit, or an emoji.
 - `draft: true` shows the post in `pnpm dev` but leaves it out of the production build.
 
 Reading time is computed from the word count. Posts are sorted newest first, and the previous/next links at the bottom of each post follow that order.
@@ -67,3 +68,4 @@ Camera names are normalized in `src/lib/photo-metadata.ts`: Sony's `ILCE-6400` (
 - `src/data/resume.ts` is the résumé content.
 - `src/styles/global.css` holds the site colors and Markdown typography.
 - `src/content.config.ts` defines the blog and optional photo frontmatter schemas.
+- `src/lib/dropcaps.ts` lists the drop cap designs and the default. Each design is an 80 × 80 SVG in `public/dropcaps/`; to add one, save its SVG there and add its name to the list.

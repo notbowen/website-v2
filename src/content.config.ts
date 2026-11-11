@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { dropCaps } from './lib/dropcaps';
 
 const blog = defineCollection({
   loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
@@ -13,6 +14,8 @@ const blog = defineCollection({
     excerpt: z.string().optional(),
     /** Opening paragraph shown large at the top of the post. Falls back to `excerpt`. */
     lede: z.string().optional(),
+    /** Drop cap design for the opening letter (see src/lib/dropcaps.ts), or `none`. */
+    dropcap: z.enum([...dropCaps, 'none']).optional(),
     /** Drafts are visible in `astro dev` but excluded from the production build. */
     draft: z.boolean().default(false),
   }),

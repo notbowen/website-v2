@@ -2,6 +2,7 @@
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { getPosts, type Post } from '../../lib/posts';
+import { defaultDropCap, dropCapUrl, splitInitial } from '../../lib/dropcaps';
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -20,13 +21,17 @@ interface Props {
 
 const { post, prev, next } = Astro.props;
 const { Content } = await render(post);
+
+// The Markdown body's first letter is wrapped by rehype-drop-cap; a lede is wrapped here.
+const dropCap = post.data.dropcap ?? defaultDropCap;
+const ledeInitial = dropCap !== 'none' && post.lede ? splitInitial(post.lede) : null;
 ---
 
 <Base title={post.data.title} description={post.data.excerpt} here="blog">
   <main class="post-page">
     <a class="back" href="/blog">← all posts</a>
 
-    <article>
+    <article style={dropCap !== 'none' ? `--dropcap: url(${dropCapUrl(dropCap)})` : undefined}>
       <div class="meta">
         <time datetime={post.dateIso}>{post.dateFull}</time> · {post.readTime}
       </div>
@@ -41,7 +46,20 @@ const { Content } = await render(post);
         }
       </div>
 
-      {post.lede && <p class="lede">{post.lede}</p>}
+      {
+        post.lede && (
+          <p class="lede">
+            {ledeInitial ? (
+              <>
+                <span class="dropcap"><span>{ledeInitial[0]}</span></span>
+                {ledeInitial[1]}
+              </>
+            ) : (
+              post.lede
+            )}
+          </p>
+        )
+      }
 
       <div class="prose">
         <Content />
