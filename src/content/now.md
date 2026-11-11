@@ -4,14 +4,21 @@ updated: 2026-10-09
 
 ## Health
 
-Heading into national service, so the nation will force me to stay fit by
+Stuck in national service, so the nation is forcing me to stay fit by
 waking up before 5:30am and sleeping (hopefully) by 10:30pm and conducting
 physical training during the time in-between.
 
-Current IPPT stats: 26 pushups, 31 situps, 9:53 2.4km run.
-
 As a future CS major, I've also been climbing (albeit sporadically). Currently stuck at 4
 bars @ Fit Bloc.
+
+## IPPT
+
+Servicemen are required to take part in a physical fitness test called
+[IPPT](https://www.ns.gov.sg/web/profiles/nsman/ippt-and-ns-fit). Here are my
+stats thus far:
+
+- 08 Oct 2026: 26 pushups, 31 situps, 9:53 2.4km run
+- 21 Oct 2026: 34 pushups, 36 situps, 9:43 2.4km run
 
 ## Reading
 
@@ -20,8 +27,8 @@ Hassabis' biography: _The Infinity Machine_.
 
 ## Tech
 
-Intending on reading up on compilers since I managed to obtain a physical copy
-of _Crafting Interpreters_.
+Learning the [Lean programming language](https://lean-lang.org/) to try and
+understand both functional programming and theorem proving.
 
 Vibe-coding out a web-based coding harness like `pi` so that I can vibe-code in
 NS.
