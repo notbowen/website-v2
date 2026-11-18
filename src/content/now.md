@@ -22,8 +22,16 @@ stats thus far:
 
 ## Reading
 
-Currently checking out _The Hitchhiker's Guide to the Galaxy_ and Demis
-Hassabis' biography: _The Infinity Machine_.
+Currently checking out Edward Thorp's memoir, [_A Man for All
+Markets_](https://www.goodreads.com/en/book/show/25733505-a-man-for-all-markets).
+
+Few of the books I've read and enjoyed over the past few months are: [_Chip
+War_](https://www.goodreads.com/en/book/show/60321447-chip-war), a book on the
+semiconductor industry by Chris Miller; [_Source
+Code_](https://www.goodreads.com/en/book/show/213034913-source-code), Bill
+Gates' memoir; and [_The Man Who Solved the
+Market_](https://www.goodreads.com/book/show/43889703-the-man-who-solved-the-market),
+a book on Jim Simons and Rentech by Gregory Zuckerman.
 
 ## Tech
 
